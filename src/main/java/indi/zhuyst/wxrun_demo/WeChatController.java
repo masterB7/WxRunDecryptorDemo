@@ -48,10 +48,7 @@ public class WeChatController {
 
     @PostMapping("template")
     public String sendTemplate(String formId) throws IOException {
-        Request request = new Request.Builder().url(ACCESS_TOKEN_URL).build();
-        Response response = client.newCall(request).execute();
-        String json = response.body().string();
-        AccessToken accessToken = objectMapper.readValue(json,AccessToken.class);
+        AccessToken accessToken = getAccessToken();
 
         String url = TEMPLATE_URL.replace("ACCESS_TOKEN",accessToken.getAccessToken());
         Template template = new Template();
@@ -64,10 +61,10 @@ public class WeChatController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         template.putData("keyword3",format.format(new Date()));
 
-        json = objectMapper.writeValueAsString(template);
+        String json = objectMapper.writeValueAsString(template);
         RequestBody body = RequestBody.create(MediaType.parse("application/json"),json);
-        request = new Request.Builder().url(url).post(body).build();
-        response = client.newCall(request).execute();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = client.newCall(request).execute();
         return response.body().string();
     }
 

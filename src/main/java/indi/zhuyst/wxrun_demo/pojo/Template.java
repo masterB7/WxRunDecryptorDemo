@@ -31,7 +31,7 @@ public class Template implements Serializable{
     }
 
     @Data
-    private class Value{
+    private class Value implements Serializable{
         private String value;
 
         private String color;
