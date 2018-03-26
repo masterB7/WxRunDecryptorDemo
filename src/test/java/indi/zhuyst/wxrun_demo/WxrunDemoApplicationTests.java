@@ -5,6 +5,7 @@ import indi.zhuyst.wxrun_demo.pojo.StepInfo;
 import indi.zhuyst.wxrun_demo.pojo.StepResult;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,6 +36,20 @@ public class WxrunDemoApplicationTests {
 			System.out.println(format.format(date)
 					+ " —— " + info.getStep() + "步");
 		}
+	}
+
+	@Test
+	public void test() throws Exception{
+		String sessionKey = "W3NxSxKqlqWsFZvQoco1wg==";
+		String encryptedData = "e52FZc2z10RJNrTpiAczIkrzai966XxCIt0Ao1Q0s9BGnQ3NO/I7JZ3huE1xgL7wZlPSxazFND6zBq5m+TEsB2bWQEf0I3iApJ0/1rkPMp4LTypiTN2AuImuEFrTQMpJsV9JSgCQtboNOLCorPgXmct3I7W28S0kRfh9WrZ6Fel1KgBIFsoPJ/Scrjhi915GwdQpUODawNlUzbv4xrcbTWiwEeojnfxlDshTwdOgNYBN0DqLfVpbZ/hRiiYiHaP33ag+Sn9Km4rEswq+mN6FXhkmOPW+pcNcPpWEyCM1V1j05a3sQfgIotUODziKb2qmjsEuzJ1XqTsRaF03akM64SzQPTy5pb0wx0ja9+bElbibbZoM8pf2D2jHFMmhGu09HKY9WUjIexfn9vpRcMGAKEwJI32L21vzLJE0quHWBWPoU4FB24Ek+YX+wOgNKxt5VNjn9JO8Z+yW8m+n8AUkVLP135ARtw//oV0vJaicNVSUXlqtREoTccaB/mxKp8BqosLQrBgg+mwMakJAlS4sIA==";
+		String iv = "ShnlQ7Sonv1gsTiHoLxjzg==";
+
+		byte[] result = AesDecryptor.decrypt(Base64.decodeBase64(encryptedData),
+				Base64.decodeBase64(sessionKey),
+				Base64.decodeBase64(iv));
+
+		String resultStr = new String(result,"UTF-8");
+		System.out.println(resultStr);
 	}
 
 }

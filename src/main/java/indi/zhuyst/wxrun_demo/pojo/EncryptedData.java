@@ -3,7 +3,7 @@ package indi.zhuyst.wxrun_demo.pojo;
 import lombok.Data;
 
 @Data
-public class WxRunEncryptedData {
+public class EncryptedData {
 
     private String encryptedData;
 
