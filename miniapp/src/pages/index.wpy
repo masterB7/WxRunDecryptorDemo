@@ -1,0 +1,81 @@
+<template>
+  <view>code : {{code}}</view>
+
+  <view>openId : {{openId}}</view>
+  <view>sessionKey : {{sessionKey}}</view>
+
+  <view>encryptedData : {{encryptedData}}</view>
+  <view>iv : {{iv}}</view>
+
+  <view>run : {{run}}</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  const SERVER_URL = "http://127.0.0.1:8090";
+
+  export default class Index extends wepy.page {
+    data = {
+      code : null,
+      openId : null,
+      sessionKey : null,
+      encryptedData : null,
+      iv : null,
+      run : null,
+    };
+
+    methods = {
+    };
+
+    async login() {
+      const res = await wepy.login();
+      console.log(res);
+      this.code = res.code;
+      this.$apply();
+    }
+
+    async requestOpenId(){
+      const res = await wepy.request({
+        url: `${SERVER_URL}/get?code=${this.code}`
+      });
+      console.log(res);
+      const data = res.data;
+      const sessionKey = data.session_key;
+
+      this.openId = data.openid;
+      this.sessionKey = sessionKey;
+      this.$apply();
+    }
+
+    async requestEncryptedData(){
+      const res = await wepy.getWeRunData();
+      console.log(res);
+      this.encryptedData = res.encryptedData;
+      this.iv = res.iv;
+      this.$apply();
+    }
+
+    async requestWxRunData(){
+      const res = await wepy.request({
+        url: `${SERVER_URL}/run`,
+        method: 'POST',
+        data: {
+          encryptedData: this.encryptedData,
+          iv: this.iv,
+          sessionKey: this.sessionKey
+        }
+      });
+      console.log(res);
+      this.run = JSON.stringify(res.data);
+      this.$apply();
+    }
+
+    async onLoad(){
+      await this.login();
+      await this.requestOpenId();
+      await this.requestEncryptedData();
+      await this.requestWxRunData();
+    }
+  }
+</script>

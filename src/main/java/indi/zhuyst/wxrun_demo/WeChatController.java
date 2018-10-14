@@ -19,7 +19,7 @@ public class WeChatController {
     private static final String APP_SECRET = "b9a3226d1ea8939a6c0a8881cba76824";
 
     private static final String OPEN_ID_URL = "https://api.weixin.qq.com/sns/jscode2session?appid="
-            + APP_ID + "&secret=" + APP_SECRET + "js_code=JSCODE&grant_type=authorization_code";
+            + APP_ID + "&secret=" + APP_SECRET + "&js_code=JSCODE&grant_type=authorization_code";
 
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
             + APP_ID + "&secret=" + APP_SECRET;
@@ -69,7 +69,7 @@ public class WeChatController {
     }
 
     @PostMapping("decrypt")
-    public String getDecryptData(EncryptedData data) throws Exception{
+    public String getDecryptData(@org.springframework.web.bind.annotation.RequestBody  EncryptedData data) throws Exception{
         byte[] result = AesDecryptor.decrypt(Base64.decodeBase64(data.getEncryptedData()),
                 Base64.decodeBase64(data.getSessionKey()),
                 Base64.decodeBase64(data.getIv()));
@@ -80,7 +80,7 @@ public class WeChatController {
     }
 
     @PostMapping("run")
-    public StepResult getWxRunResult(EncryptedData data) throws Exception{
+    public StepResult getWxRunResult(@org.springframework.web.bind.annotation.RequestBody EncryptedData data) throws Exception{
         String resultStr = getDecryptData(data);
 
         StepResult stepResult = objectMapper.readValue(resultStr,StepResult.class);
